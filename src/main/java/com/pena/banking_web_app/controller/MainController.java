@@ -62,11 +62,17 @@ String loginPage(){
         return "dashboard";
     }
     @PostMapping(path = "/deposit")
-    public String depositCash(@RequestParam Double amount){
+    public String depositCash(@RequestParam Double amount,
+                              RedirectAttributes redirectAttributes){
+        if (amount<0){
+            redirectAttributes.addFlashAttribute("error", "Cannot deposit less than 0.");
+            return "redirect:/dashboard";
+        }
         if(accountService.transact(amount,account)){
             transactionService.updateAmount(user, amount,"Deposit", user.getNumber(), user.getNumber());
         }
 
+        redirectAttributes.addFlashAttribute("success", "Successfully deposited "+ amount+ " into your account!");
         return "redirect:/dashboard";
     }
     @PostMapping(path = "/withdraw")
