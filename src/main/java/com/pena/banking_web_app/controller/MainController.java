@@ -85,7 +85,7 @@ String loginPage(){
         if(accountService.transact(-amount,account)){
             transactionService.updateAmount(user, -amount,"Withdraw", user.getNumber(), user.getNumber());
         }
-        redirectAttributes.addFlashAttribute("success", "Withdrawal is successful!");
+        redirectAttributes.addFlashAttribute("success", "Withdrawal successful!");
         return "redirect:/dashboard";
 
     }
