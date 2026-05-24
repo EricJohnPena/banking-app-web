@@ -70,10 +70,16 @@ String loginPage(){
         return "redirect:/dashboard";
     }
     @PostMapping(path = "/withdraw")
-    public String withdrawCash(@RequestParam Double amount){
+    public String withdrawCash(@RequestParam Double amount,
+                               RedirectAttributes redirectAttributes){
+        if(amount > account.getBalance()){
+            redirectAttributes.addFlashAttribute("error", "Insufficient balance.");
+            return  "redirect:/dashboard";
+        }
         if(accountService.transact(-amount,account)){
             transactionService.updateAmount(user, -amount,"Withdraw", user.getNumber(), user.getNumber());
         }
+        redirectAttributes.addFlashAttribute("success", "Withdrawal is successful!");
         return "redirect:/dashboard";
 
     }
@@ -94,12 +100,11 @@ String loginPage(){
             redirectAttributes.addFlashAttribute("error", "Transfer failed. Insufficient balance or error occurred.");
             return "redirect:/dashboard";
         }
-        if(!to_number.equalsIgnoreCase(user.getNumber())
-                && recipient!= null && accountService.transact(-amount, account)
-                && accountService.transact(amount,recipientAcc)){
+        if(accountService.transact(-amount, account) && accountService.transact(amount,recipientAcc)){
             transactionService.updateAmount(user,-amount,"Transfer",to_number, user.getNumber());
             transactionService.updateAmount(recipient,amount,"Receive", user.getNumber(),to_number);
         }
+        redirectAttributes.addFlashAttribute("success", "Transfer successful!");
         return "redirect:/dashboard";
     }
 
