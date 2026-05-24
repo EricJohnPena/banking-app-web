@@ -10,6 +10,7 @@ import com.pena.banking_web_app.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -77,9 +78,22 @@ String loginPage(){
 
     }
     @PostMapping(path = "/transfer")
-    public String transfer(@RequestParam Double amount, @RequestParam String to_number){
+    public String transfer(@RequestParam Double amount, @RequestParam String to_number,
+                           RedirectAttributes redirectAttributes){
         User recipient = userService.findByNumber(to_number);
         Account recipientAcc = accountService.findByUser(recipient);
+        if(recipient == null){
+            redirectAttributes.addFlashAttribute("error", "Recipient not found.");
+            return "redirect:/dashboard";
+        }
+        if (to_number.equalsIgnoreCase(user.getNumber())) {
+            redirectAttributes.addFlashAttribute("error", "You cannot transfer to yourself.");
+            return "redirect:/dashboard";
+        }
+        if(account.getBalance()< amount){
+            redirectAttributes.addFlashAttribute("error", "Transfer failed. Insufficient balance or error occurred.");
+            return "redirect:/dashboard";
+        }
         if(!to_number.equalsIgnoreCase(user.getNumber())
                 && recipient!= null && accountService.transact(-amount, account)
                 && accountService.transact(amount,recipientAcc)){
