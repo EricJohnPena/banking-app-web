@@ -88,18 +88,18 @@ http://localhost:8080/login
 ```
 
 ## Usage Guide
-
+![Signup](screenshots/signup.png)
 ### Register a new user
 1. Open `/signup`
 2. Enter name, account number, email, PIN, and confirm PIN
 3. Submit the form
 4. After successful signup, you will be redirected to `/login`
-
+![Login](screenshots/login.png)
 ### Login
 1. Open `/login`
 2. Enter your account number and PIN
 3. If valid, you will be redirected to `/dashboard`
-
+![Dashboard](screenshots/dashboard1.png)
 ### Dashboard actions
 - View current account balance
 - Review transaction history
