@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Ledge-It | Login</title>
+    <title>Ledge-It | Sign Up</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -25,7 +25,7 @@
             border-radius: 16px;
             padding: 40px;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
@@ -61,48 +61,84 @@
             text-align: center;
             margin-top: 15px;
         }
+
+        .link-text {
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .link-text a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .link-text a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 
 <div class="login-card">
 
+    <!-- HEADER -->
     <div class="text-center mb-4">
         <div class="brand">Ledge-It</div>
-        <div class="subtitle">Secure Personal Banking</div>
+        <div class="subtitle">Create your banking account</div>
     </div>
 
-    <!-- Login Form -->
-    <form th:action="@{/login}" method="post">
+    <!-- SIGN UP FORM -->
+    <form th:action="@{/signup}" method="post">
 
-        <!-- Error Message -->
+        <!-- ERROR -->
         <div th:if="${error}" class="alert alert-danger text-center">
-            Invalid email or password
+            <span th:text="${error}">Signup failed</span>
         </div>
 
-        <!-- Email -->
+        <!-- FULL NAME -->
         <div class="mb-3">
-            <label class="form-label">Mobile number:</label>
-            <input type="text" name="number" class="form-control" placeholder="Enter your mobile number" required>
+            <label class="form-label">Full Name</label>
+            <input type="text" name="name" class="form-control" placeholder="Enter your full name" required>
         </div>
 
-        <!-- Password -->
+        <!-- MOBILE NUMBER -->
         <div class="mb-3">
-            <label class="form-label">PIN:</label>
-            <input type="password" name="pin" class="form-control" placeholder="Enter your pin" required>
+            <label class="form-label">Mobile Number</label>
+            <input type="text" name="number" class="form-control" placeholder="09XXXXXXXXX" required>
         </div>
 
-        <!-- Submit -->
+        <!-- EMAIL (optional but good for banking apps) -->
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" placeholder="Enter your email">
+        </div>
+
+        <!-- PIN -->
+        <div class="mb-3">
+            <label class="form-label">Create PIN</label>
+            <input type="password" name="pin" class="form-control" placeholder="4-6 digit PIN" required>
+        </div>
+
+        <!-- CONFIRM PIN -->
+        <div class="mb-3">
+            <label class="form-label">Confirm PIN</label>
+            <input type="password" name="confirmPin" class="form-control" placeholder="Re-enter PIN" required>
+        </div>
+
+        <!-- SUBMIT -->
         <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary">Create Account</button>
         </div>
 
     </form>
-    <!-- REGISTER LINK -->
+
+    <!-- LOGIN LINK -->
     <div class="link-text">
-        Create an account.
-        <a th:href="@{/signup}">Register</a>
+        Already have an account?
+        <a th:href="@{/login}">Login</a>
     </div>
+
     <div class="footer-text">
         © 2026 Ledge-It. All rights reserved.
     </div>

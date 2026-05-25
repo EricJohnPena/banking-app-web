@@ -2,11 +2,13 @@ package com.pena.banking_web_app.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,4 +17,9 @@ public class Account {
     @OneToOne
     @JoinColumn(name = "fk_user_id")
     private User user;
+
+    public Account(Double balance, User user) {
+        this.balance = balance;
+        this.user = user;
+    }
 }

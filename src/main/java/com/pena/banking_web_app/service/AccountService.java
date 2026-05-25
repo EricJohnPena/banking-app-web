@@ -21,6 +21,11 @@ public class AccountService {
         accountRepository.save(account);
         return true;
     }
+    public void createAccount(User user){
+        Account account = new Account(0.0, user);
+        accountRepository.save(account);
+
+    }
 
 
 

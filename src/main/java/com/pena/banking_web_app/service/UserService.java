@@ -1,6 +1,8 @@
 package com.pena.banking_web_app.service;
 
+import com.pena.banking_web_app.model.Account;
 import com.pena.banking_web_app.model.User;
+import com.pena.banking_web_app.repository.AccountRepository;
 import com.pena.banking_web_app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private UserRepository userRepository;
+    private AccountRepository accountRepository;
     
     public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
@@ -31,5 +34,13 @@ public class UserService {
     public boolean existsByNumber(String number){
         return userRepository.existsByNumber(number);
     }
+
+    public User createUser(String username, String number, String email, String pin) {
+        User user = new User(username, email,number, pin);
+        userRepository.save(user);
+        return user;
+    }
+
+
 
 }

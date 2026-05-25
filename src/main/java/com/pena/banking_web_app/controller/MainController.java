@@ -33,22 +33,21 @@ public class MainController {
     }
 
 
-@GetMapping(path = "/test")
-@ResponseBody
-String test(){
-        user = userService.findByNumber("0987654321");
-        return user.getUsername();
-}
-@GetMapping("/login")
-String loginPage(){
-        return "login";
-}
-    @GetMapping(path = "/test/reset")
+    @GetMapping(path = "/test")
     @ResponseBody
-    String testReset(){
-        user = null;
-        return user.getNumber();
+    String test(){
+            user = userService.findByNumber("0987654321");
+            return user.getUsername();
     }
+    @GetMapping("/login")
+    String loginPage(){
+            return "login";
+    }
+    @GetMapping("/signup")
+    String signupPage(){
+        return "signup";
+    }
+
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
 
@@ -123,14 +122,33 @@ String loginPage(){
 
     @PostMapping(path = "/login")
     String login(@RequestParam String number,  @RequestParam String pin,  Model model){
-        System.out.println(number);
         user = userService.findByNumber(number);
-
         if(user != null && pin.equalsIgnoreCase(user.getPin())){
-
             return "redirect:/dashboard";
         }
         model.addAttribute("error", true);
         return "login";
+    }
+
+    @PostMapping("/signup")
+    public String signup(@RequestParam String name,
+                         @RequestParam String number,
+                         @RequestParam String email,
+                         @RequestParam String pin,
+                         @RequestParam String confirmPin,
+                         RedirectAttributes redirectAttributes) {
+        if (!pin.equals(confirmPin)) {
+            redirectAttributes.addFlashAttribute("error", "PIN does not match");
+            return "redirect:/signup";
+        }
+
+        if(userService.findByUsername(name) != null || userService.findByNumber(number) != null){
+            redirectAttributes.addFlashAttribute("error", "User already exists.");
+            return "redirect:/signup";
+        }
+        User userCreated = userService.createUser(name, number, email, pin);
+        accountService.createAccount(userCreated);
+        redirectAttributes.addFlashAttribute("success", "Account created successfully!");
+        return "redirect:/login";
     }
 }
