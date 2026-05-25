@@ -122,12 +122,12 @@ public class MainController {
 
     @PostMapping(path = "/login")
     String login(@RequestParam String number,  @RequestParam String pin,  Model model){
-        user = userService.findByNumber(number);
-        if(user != null && pin.equalsIgnoreCase(user.getPin())){
-            return "redirect:/dashboard";
+        user = userService.login(number, pin);
+        if(user == null){
+            model.addAttribute("error", true);
+            return "login";
         }
-        model.addAttribute("error", true);
-        return "login";
+        return "redirect:/dashboard";
     }
 
     @PostMapping("/signup")

@@ -2,24 +2,18 @@ package com.pena.banking_web_app.service;
 
 import com.pena.banking_web_app.model.Account;
 import com.pena.banking_web_app.model.User;
-import com.pena.banking_web_app.repository.AccountRepository;
 import com.pena.banking_web_app.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
-    private AccountRepository accountRepository;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
     
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     public User findById(int id){
         return userRepository.findById(id).orElseThrow();
@@ -27,8 +21,23 @@ public class UserService {
     public User findByUsername(String username){
         return userRepository.findByUsername(username);
     }
-    public User findByNumber(String number){
-        return userRepository.findByNumber(number);
+    public User findByNumber(String number){return  userRepository.findByNumber(number);}
+
+    public User login(String number, String pin){
+
+        User user = userRepository.findByNumber(number);
+
+        if (user==null) {
+            return null;
+        }
+        // 🔐 Compare entered PIN vs hashed PIN
+        boolean matches = passwordEncoder.matches(pin, user.getPin());
+
+        if (!matches) {
+            return null;
+        }
+
+        return user;
     }
 
     public boolean existsByNumber(String number){
@@ -37,6 +46,7 @@ public class UserService {
 
     public User createUser(String username, String number, String email, String pin) {
         User user = new User(username, email,number, pin);
+        user.setPin(passwordEncoder.encode(pin));
         userRepository.save(user);
         return user;
     }
