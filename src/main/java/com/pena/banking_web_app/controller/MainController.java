@@ -32,7 +32,10 @@ public class MainController {
         this.transactionService = transactionService;
     }
 
-
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/login";
+    }
     @GetMapping(path = "/test")
     @ResponseBody
     String test(){
