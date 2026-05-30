@@ -124,7 +124,6 @@ http://localhost:8080/login
 
 ## Suggested Improvements
 
-- Add password hashing for PIN storage
 - Add role-based authentication
 - Improve validation on registration and transaction forms
 - Add unit and integration tests for service and controller logic
